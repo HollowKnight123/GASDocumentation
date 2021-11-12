@@ -4,9 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "AbilitySystemInterface.h"
-#include "GameplayTagContainer.h"
-#include "GASDocumentation/GASDocumentation.h"
 #include "GDCharacterBase.generated.h"
 
 /**

@@ -2,20 +2,13 @@
 
 
 #include "Characters/Heroes/GDHeroCharacter.h"
-#include "AI/GDHeroAIController.h"
 #include "Camera/CameraComponent.h"
-#include "Characters/Abilities/AttributeSets/GDAttributeSetBase.h"
-#include "Characters/Abilities/GDAbilitySystemComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/DecalComponent.h"
 #include "Components/WidgetComponent.h"
 #include "GameFramework/SpringArmComponent.h"
-#include "GASDocumentation/GASDocumentationGameMode.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
-#include "Player/GDPlayerController.h"
-#include "Player/GDPlayerState.h"
-#include "UI/GDFloatingStatusBarWidget.h"
 #include "UObject/ConstructorHelpers.h"
 
 AGDHeroCharacter::AGDHeroCharacter(const class FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -38,8 +31,6 @@ AGDHeroCharacter::AGDHeroCharacter(const class FObjectInitializer& ObjectInitial
 	GetMesh()->VisibilityBasedAnimTickOption = EVisibilityBasedAnimTickOption::AlwaysTickPoseAndRefreshBones;
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	GetMesh()->SetCollisionProfileName(FName("NoCollision"));
-
-	AIControllerClass = AGDHeroAIController::StaticClass();
 }
 
 // Called to bind functionality to input
@@ -54,9 +45,6 @@ void AGDHeroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	PlayerInputComponent->BindAxis("LookUpRate", this, &AGDHeroCharacter::LookUpRate);
 	PlayerInputComponent->BindAxis("Turn", this, &AGDHeroCharacter::Turn);
 	PlayerInputComponent->BindAxis("TurnRate", this, &AGDHeroCharacter::TurnRate);
-
-	// Bind player input to the AbilitySystemComponent. Also called in OnRep_PlayerState because of a potential race condition.
-	BindASCInput();
 }
 
 // Server only
@@ -145,8 +133,4 @@ void AGDHeroCharacter::MoveRight(float Value)
 void AGDHeroCharacter::OnRep_PlayerState()
 {
 	Super::OnRep_PlayerState();
-}
-
-void AGDHeroCharacter::BindASCInput()
-{
 }

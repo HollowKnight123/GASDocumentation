@@ -50,11 +50,6 @@ bool UGDCharacterMovementComponent::FGDSavedMove::CanCombineWith(const FSavedMov
 void UGDCharacterMovementComponent::FGDSavedMove::SetMoveFor(ACharacter * Character, float InDeltaTime, FVector const & NewAccel, FNetworkPredictionData_Client_Character & ClientData)
 {
 	Super::SetMoveFor(Character, InDeltaTime, NewAccel, ClientData);
-
-	UGDCharacterMovementComponent* CharacterMovement = Cast<UGDCharacterMovementComponent>(Character->GetCharacterMovement());
-	if (CharacterMovement)
-	{
-	}
 }
 
 void UGDCharacterMovementComponent::FGDSavedMove::PrepMoveFor(ACharacter * Character)
