@@ -18,12 +18,7 @@ void UGDAttributeSetBase::PreAttributeChange(const FGameplayAttribute& Attribute
 	// This is called whenever attributes change, so for max health/mana we want to scale the current totals to match
 	Super::PreAttributeChange(Attribute, NewValue);
 
-	// If a Max value changes, adjust current to keep Current % of Current to Max
-	if (Attribute == GetMaxHealthAttribute()) // GetMaxHealthAttribute comes from the Macros defined at the top of the header
-	{
-		AdjustAttributeForMaxChange(Health, MaxHealth, NewValue, GetHealthAttribute());
-	}
-	else if (Attribute == GetMoveSpeedAttribute())
+	if (Attribute == GetMoveSpeedAttribute())
 	{
 		// Cannot slow less than 150 units/s and cannot boost more than 1000 units/s
 		NewValue = FMath::Clamp<float>(NewValue, 150, 1000);
@@ -108,15 +103,6 @@ void UGDAttributeSetBase::PostGameplayEffectExecute(const FGameplayEffectModCall
 				WasAlive = TargetCharacter->IsAlive();
 			}
 
-			if (!TargetCharacter->IsAlive())
-			{
-				//UE_LOG(LogTemp, Warning, TEXT("%s() %s is NOT alive when receiving damage"), TEXT(__FUNCTION__), *TargetCharacter->GetName());
-			}
-
-			// Apply the health change and then clamp it
-			const float NewHealth = GetHealth() - LocalDamageDone;
-			SetHealth(FMath::Clamp(NewHealth, 0.0f, GetMaxHealth()));
-
 			if (TargetCharacter && WasAlive)
 			{
 				// This is the log statement for damage received. Turned off for live games.
@@ -134,23 +120,13 @@ void UGDAttributeSetBase::PostGameplayEffectExecute(const FGameplayEffectModCall
 			}
 		}
 	}// Damage
-	else if (Data.EvaluatedData.Attribute == GetHealthAttribute())
-	{
-		// Handle other health changes.
-		// Health loss should go through Damage.
-		SetHealth(FMath::Clamp(GetHealth(), 0.0f, GetMaxHealth()));
-	} // Health
 }
 
 void UGDAttributeSetBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	DOREPLIFETIME_CONDITION_NOTIFY(UGDAttributeSetBase, Health, COND_None, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UGDAttributeSetBase, MaxHealth, COND_None, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UGDAttributeSetBase, HealthRegenRate, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UGDAttributeSetBase, MoveSpeed, COND_None, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UGDAttributeSetBase, CharacterLevel, COND_None, REPNOTIFY_Always);
 }
 
 void UGDAttributeSetBase::AdjustAttributeForMaxChange(FGameplayAttributeData & AffectedAttribute, const FGameplayAttributeData & MaxAttribute, float NewMaxValue, const FGameplayAttribute & AffectedAttributeProperty)
@@ -167,27 +143,7 @@ void UGDAttributeSetBase::AdjustAttributeForMaxChange(FGameplayAttributeData & A
 	}
 }
 
-void UGDAttributeSetBase::OnRep_Health(const FGameplayAttributeData& OldHealth)
-{
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UGDAttributeSetBase, Health, OldHealth);
-}
-
-void UGDAttributeSetBase::OnRep_MaxHealth(const FGameplayAttributeData& OldMaxHealth)
-{
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UGDAttributeSetBase, MaxHealth, OldMaxHealth);
-}
-
-void UGDAttributeSetBase::OnRep_HealthRegenRate(const FGameplayAttributeData& OldHealthRegenRate)
-{
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UGDAttributeSetBase, HealthRegenRate, OldHealthRegenRate);
-}
-
 void UGDAttributeSetBase::OnRep_MoveSpeed(const FGameplayAttributeData& OldMoveSpeed)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UGDAttributeSetBase, MoveSpeed, OldMoveSpeed);
-}
-
-void UGDAttributeSetBase::OnRep_CharacterLevel(const FGameplayAttributeData& OldCharacterLevel)
-{
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UGDAttributeSetBase, CharacterLevel, OldCharacterLevel);
 }

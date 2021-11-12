@@ -65,50 +65,9 @@ void AGDMinionCharacter::BeginPlay()
 				if (UIFloatingStatusBar && UIFloatingStatusBarComponent)
 				{
 					UIFloatingStatusBarComponent->SetWidget(UIFloatingStatusBar);
-
-					// Setup the floating status bar
-					UIFloatingStatusBar->SetHealthPercentage(GetHealth() / GetMaxHealth());
-
 					UIFloatingStatusBar->SetCharacterName(CharacterName);
 				}
 			}
 		}
-
-		// Attribute change callbacks
-		HealthChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSetBase->GetHealthAttribute()).AddUObject(this, &AGDMinionCharacter::HealthChanged);
-
-		// Tag change callbacks
-		AbilitySystemComponent->RegisterGameplayTagEvent(FGameplayTag::RequestGameplayTag(FName("State.Debuff.Stun")), EGameplayTagEventType::NewOrRemoved).AddUObject(this, &AGDMinionCharacter::StunTagChanged);
-	}
-}
-
-void AGDMinionCharacter::HealthChanged(const FOnAttributeChangeData & Data)
-{
-	float Health = Data.NewValue;
-
-	// Update floating status bar
-	if (UIFloatingStatusBar)
-	{
-		UIFloatingStatusBar->SetHealthPercentage(Health / GetMaxHealth());
-	}
-
-	// If the minion died, handle death
-	if (!IsAlive() && !AbilitySystemComponent->HasMatchingGameplayTag(DeadTag))
-	{
-		Die();
-	}
-}
-
-void AGDMinionCharacter::StunTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
-{
-	if (NewCount > 0)
-	{
-		FGameplayTagContainer AbilityTagsToCancel;
-		AbilityTagsToCancel.AddTag(FGameplayTag::RequestGameplayTag(FName("Ability")));
-
-		FGameplayTagContainer AbilityTagsToIgnore;
-		AbilityTagsToIgnore.AddTag(FGameplayTag::RequestGameplayTag(FName("Ability.NotCanceledByStun")));
-
-		AbilitySystemComponent->CancelAbilities(&AbilityTagsToCancel, &AbilityTagsToIgnore);
 	}
 }

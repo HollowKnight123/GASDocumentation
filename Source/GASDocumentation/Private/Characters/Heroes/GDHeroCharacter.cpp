@@ -97,9 +97,6 @@ void AGDHeroCharacter::PossessedBy(AController * NewController)
 		// Forcibly set the DeadTag count to 0
 		AbilitySystemComponent->SetTagMapCount(DeadTag, 0);
 
-		// Set Health/Mana/Stamina to their max. This is only necessary for *Respawn*.
-		SetHealth(GetMaxHealth());
-
 		AddStartupEffects();
 
 		AddCharacterAbilities();
@@ -287,9 +284,6 @@ void AGDHeroCharacter::OnRep_PlayerState()
 
 		// Forcibly set the DeadTag count to 0
 		AbilitySystemComponent->SetTagMapCount(DeadTag, 0);
-
-		// Set Health/Mana/Stamina to their max. This is only necessary for *Respawn*.
-		SetHealth(GetMaxHealth());
 	}
 }
 

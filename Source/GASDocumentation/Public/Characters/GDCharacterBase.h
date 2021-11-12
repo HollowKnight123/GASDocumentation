@@ -52,15 +52,6 @@ public:
 	* Getters for attributes from GDAttributeSetBase
 	**/
 	
-	UFUNCTION(BlueprintCallable, Category = "GASDocumentation|GDCharacter|Attributes")
-	int32 GetCharacterLevel() const;
-
-	UFUNCTION(BlueprintCallable, Category = "GASDocumentation|GDCharacter|Attributes")
-	float GetHealth() const;
-
-	UFUNCTION(BlueprintCallable, Category = "GASDocumentation|GDCharacter|Attributes")
-	float GetMaxHealth() const;
-	
 	// Gets the Current value of MoveSpeed
 	UFUNCTION(BlueprintCallable, Category = "GASDocumentation|GDCharacter|Attributes")
 	float GetMoveSpeed() const;
@@ -119,11 +110,4 @@ protected:
 	virtual void InitializeAttributes();
 
 	virtual void AddStartupEffects();
-
-
-	/**
-	* Setters for Attributes. Only use these in special cases like Respawning, otherwise use a GE to change Attributes.
-	* These change the Attribute's Base Value.
-	*/
-	virtual void SetHealth(float Health);
 };

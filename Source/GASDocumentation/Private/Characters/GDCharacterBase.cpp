@@ -32,7 +32,7 @@ UAbilitySystemComponent * AGDCharacterBase::GetAbilitySystemComponent() const
 
 bool AGDCharacterBase::IsAlive() const
 {
-	return GetHealth() > 0.0f;
+	return true;
 }
 
 int32 AGDCharacterBase::GetAbilityLevel(EGDAbilityInputID AbilityID) const
@@ -103,36 +103,6 @@ EGDHitReactDirection AGDCharacterBase::GetHitReactDirection(const FVector & Impa
 	}
 
 	return EGDHitReactDirection::Front;
-}
-
-int32 AGDCharacterBase::GetCharacterLevel() const
-{
-	if (AttributeSetBase.IsValid())
-	{
-		return static_cast<int32>(AttributeSetBase->GetCharacterLevel());
-	}
-
-	return 0;
-}
-
-float AGDCharacterBase::GetHealth() const
-{
-	if (AttributeSetBase.IsValid())
-	{
-		return AttributeSetBase->GetHealth();
-	}
-
-	return 100.0f;
-}
-
-float AGDCharacterBase::GetMaxHealth() const
-{
-	if (AttributeSetBase.IsValid())
-	{
-		return AttributeSetBase->GetMaxHealth();
-	}
-
-	return 0.0f;
 }
 
 float AGDCharacterBase::GetMoveSpeed() const
@@ -233,7 +203,7 @@ void AGDCharacterBase::InitializeAttributes()
 	FGameplayEffectContextHandle EffectContext = AbilitySystemComponent->MakeEffectContext();
 	EffectContext.AddSourceObject(this);
 
-	FGameplayEffectSpecHandle NewHandle = AbilitySystemComponent->MakeOutgoingSpec(DefaultAttributes, GetCharacterLevel(), EffectContext);
+	FGameplayEffectSpecHandle NewHandle = AbilitySystemComponent->MakeOutgoingSpec(DefaultAttributes, 1, EffectContext);
 	if (NewHandle.IsValid())
 	{
 		FActiveGameplayEffectHandle ActiveGEHandle = AbilitySystemComponent->ApplyGameplayEffectSpecToTarget(*NewHandle.Data.Get(), AbilitySystemComponent.Get());
@@ -252,7 +222,7 @@ void AGDCharacterBase::AddStartupEffects()
 
 	for (TSubclassOf<UGameplayEffect> GameplayEffect : StartupEffects)
 	{
-		FGameplayEffectSpecHandle NewHandle = AbilitySystemComponent->MakeOutgoingSpec(GameplayEffect, GetCharacterLevel(), EffectContext);
+		FGameplayEffectSpecHandle NewHandle = AbilitySystemComponent->MakeOutgoingSpec(GameplayEffect, 1, EffectContext);
 		if (NewHandle.IsValid())
 		{
 			FActiveGameplayEffectHandle ActiveGEHandle = AbilitySystemComponent->ApplyGameplayEffectSpecToTarget(*NewHandle.Data.Get(), AbilitySystemComponent.Get());
@@ -260,12 +230,4 @@ void AGDCharacterBase::AddStartupEffects()
 	}
 
 	AbilitySystemComponent->StartupEffectsApplied = true;
-}
-
-void AGDCharacterBase::SetHealth(float Health)
-{
-	if (AttributeSetBase.IsValid())
-	{
-		AttributeSetBase->SetHealth(Health);
-	}
 }

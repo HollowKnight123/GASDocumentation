@@ -45,7 +45,7 @@ UGDAttributeSetBase * AGDPlayerState::GetAttributeSetBase() const
 
 bool AGDPlayerState::IsAlive() const
 {
-	return GetHealth() > 0.0f;
+	return true;
 }
 
 void AGDPlayerState::ShowAbilityConfirmCancelText(bool ShowText)
@@ -61,145 +61,12 @@ void AGDPlayerState::ShowAbilityConfirmCancelText(bool ShowText)
 	}
 }
 
-float AGDPlayerState::GetHealth() const
-{
-	return AttributeSetBase->GetHealth();
-}
-
-float AGDPlayerState::GetMaxHealth() const
-{
-	return AttributeSetBase->GetMaxHealth();
-}
-
-float AGDPlayerState::GetHealthRegenRate() const
-{
-	return AttributeSetBase->GetHealthRegenRate();
-}
-
 float AGDPlayerState::GetMoveSpeed() const
 {
 	return AttributeSetBase->GetMoveSpeed();
 }
 
-int32 AGDPlayerState::GetCharacterLevel() const
-{
-	return AttributeSetBase->GetCharacterLevel();
-}
-
 void AGDPlayerState::BeginPlay()
 {
 	Super::BeginPlay();
-
-	if (AbilitySystemComponent)
-	{
-		// Attribute change callbacks
-		HealthChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSetBase->GetHealthAttribute()).AddUObject(this, &AGDPlayerState::HealthChanged);
-		MaxHealthChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSetBase->GetMaxHealthAttribute()).AddUObject(this, &AGDPlayerState::MaxHealthChanged);
-		HealthRegenRateChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSetBase->GetHealthRegenRateAttribute()).AddUObject(this, &AGDPlayerState::HealthRegenRateChanged);
-		CharacterLevelChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSetBase->GetCharacterLevelAttribute()).AddUObject(this, &AGDPlayerState::CharacterLevelChanged);
-
-		// Tag change callbacks
-		AbilitySystemComponent->RegisterGameplayTagEvent(FGameplayTag::RequestGameplayTag(FName("State.Debuff.Stun")), EGameplayTagEventType::NewOrRemoved).AddUObject(this, &AGDPlayerState::StunTagChanged);
-	}
-}
-
-void AGDPlayerState::HealthChanged(const FOnAttributeChangeData & Data)
-{
-	float Health = Data.NewValue;
-
-	// Update floating status bar
-	AGDHeroCharacter* Hero = Cast<AGDHeroCharacter>(GetPawn());
-	if (Hero)
-	{
-		UGDFloatingStatusBarWidget* HeroFloatingStatusBar = Hero->GetFloatingStatusBar();
-		if (HeroFloatingStatusBar)
-		{
-			HeroFloatingStatusBar->SetHealthPercentage(Health / GetMaxHealth());
-		}
-	}
-
-	// Update the HUD
-	// Handled in the UI itself using the AsyncTaskAttributeChanged node as an example how to do it in Blueprint
-
-	// If the player died, handle death
-	if (!IsAlive() && !AbilitySystemComponent->HasMatchingGameplayTag(DeadTag))
-	{
-		if (Hero)
-		{
-			Hero->Die();
-		}
-	}
-}
-
-void AGDPlayerState::MaxHealthChanged(const FOnAttributeChangeData & Data)
-{
-	float MaxHealth = Data.NewValue;
-
-	// Update floating status bar
-	AGDHeroCharacter* Hero = Cast<AGDHeroCharacter>(GetPawn());
-	if (Hero)
-	{
-		UGDFloatingStatusBarWidget* HeroFloatingStatusBar = Hero->GetFloatingStatusBar();
-		if (HeroFloatingStatusBar)
-		{
-			HeroFloatingStatusBar->SetHealthPercentage(GetHealth() / MaxHealth);
-		}
-	}
-
-	// Update the HUD
-	AGDPlayerController* PC = Cast<AGDPlayerController>(GetOwner());
-	if (PC)
-	{
-		UGDHUDWidget* HUD = PC->GetHUD();
-		if (HUD)
-		{
-			HUD->SetMaxHealth(MaxHealth);
-		}
-	}
-}
-
-void AGDPlayerState::HealthRegenRateChanged(const FOnAttributeChangeData & Data)
-{
-	float HealthRegenRate = Data.NewValue;
-
-	// Update the HUD
-	AGDPlayerController* PC = Cast<AGDPlayerController>(GetOwner());
-	if (PC)
-	{
-		UGDHUDWidget* HUD = PC->GetHUD();
-		if (HUD)
-		{
-			HUD->SetHealthRegenRate(HealthRegenRate);
-		}
-	}
-}
-
-void AGDPlayerState::CharacterLevelChanged(const FOnAttributeChangeData & Data)
-{
-	float CharacterLevel = Data.NewValue;
-
-	// Update the HUD
-	AGDPlayerController* PC = Cast<AGDPlayerController>(GetOwner());
-	if (PC)
-	{
-		UGDHUDWidget* HUD = PC->GetHUD();
-		if (HUD)
-		{
-			HUD->SetHeroLevel(CharacterLevel);
-		}
-	}
-}
-
-void AGDPlayerState::StunTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
-{
-	if (NewCount > 0)
-	{
-		FGameplayTagContainer AbilityTagsToCancel;
-		AbilityTagsToCancel.AddTag(FGameplayTag::RequestGameplayTag(FName("Ability")));
-
-		FGameplayTagContainer AbilityTagsToIgnore;
-		AbilityTagsToIgnore.AddTag(FGameplayTag::RequestGameplayTag(FName("Ability.NotCanceledByStun")));
-
-		AbilitySystemComponent->CancelAbilities(&AbilityTagsToCancel, &AbilityTagsToIgnore);
-	}
 }
