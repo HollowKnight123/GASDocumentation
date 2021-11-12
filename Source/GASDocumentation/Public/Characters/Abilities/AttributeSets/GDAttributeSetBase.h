@@ -48,41 +48,6 @@ public:
 	FGameplayAttributeData HealthRegenRate;
 	ATTRIBUTE_ACCESSORS(UGDAttributeSetBase, HealthRegenRate)
 
-	// Current Mana, used to execute special abilities. Capped by MaxMana.
-	UPROPERTY(BlueprintReadOnly, Category = "Mana", ReplicatedUsing = OnRep_Mana)
-	FGameplayAttributeData Mana;
-	ATTRIBUTE_ACCESSORS(UGDAttributeSetBase, Mana)
-
-	// MaxMana is its own attribute since GameplayEffects may modify it
-	UPROPERTY(BlueprintReadOnly, Category = "Mana", ReplicatedUsing = OnRep_MaxMana)
-	FGameplayAttributeData MaxMana;
-	ATTRIBUTE_ACCESSORS(UGDAttributeSetBase, MaxMana)
-
-	// Mana regen rate will passively increase Mana every second
-	UPROPERTY(BlueprintReadOnly, Category = "Mana", ReplicatedUsing = OnRep_ManaRegenRate)
-	FGameplayAttributeData ManaRegenRate;
-	ATTRIBUTE_ACCESSORS(UGDAttributeSetBase, ManaRegenRate)
-
-	// Current stamina, used to execute special abilities. Capped by MaxStamina.
-	UPROPERTY(BlueprintReadOnly, Category = "Stamina", ReplicatedUsing = OnRep_Stamina)
-	FGameplayAttributeData Stamina;
-	ATTRIBUTE_ACCESSORS(UGDAttributeSetBase, Stamina)
-
-	// MaxStamina is its own attribute since GameplayEffects may modify it
-	UPROPERTY(BlueprintReadOnly, Category = "Stamina", ReplicatedUsing = OnRep_MaxStamina)
-	FGameplayAttributeData MaxStamina;
-	ATTRIBUTE_ACCESSORS(UGDAttributeSetBase, MaxStamina)
-
-	// Stamina regen rate will passively increase Stamina every second
-	UPROPERTY(BlueprintReadOnly, Category = "Stamina", ReplicatedUsing = OnRep_StaminaRegenRate)
-	FGameplayAttributeData StaminaRegenRate;
-	ATTRIBUTE_ACCESSORS(UGDAttributeSetBase, StaminaRegenRate)
-
-	// Armor reduces the amount of damage done by attackers
-	UPROPERTY(BlueprintReadOnly, Category = "Armor", ReplicatedUsing = OnRep_Armor)
-	FGameplayAttributeData Armor;
-	ATTRIBUTE_ACCESSORS(UGDAttributeSetBase, Armor)
-
 	// Damage is a meta attribute used by the DamageExecution to calculate final damage, which then turns into -Health
 	// Temporary value that only exists on the Server. Not replicated.
 	UPROPERTY(BlueprintReadOnly, Category = "Damage")
@@ -115,27 +80,6 @@ protected:
 
 	UFUNCTION()
 	virtual void OnRep_HealthRegenRate(const FGameplayAttributeData& OldHealthRegenRate);
-
-	UFUNCTION()
-	virtual void OnRep_Mana(const FGameplayAttributeData& OldMana);
-
-	UFUNCTION()
-	virtual void OnRep_MaxMana(const FGameplayAttributeData& OldMaxMana);
-
-	UFUNCTION()
-	virtual void OnRep_ManaRegenRate(const FGameplayAttributeData& OldManaRegenRate);
-
-	UFUNCTION()
-	virtual void OnRep_Stamina(const FGameplayAttributeData& OldStamina);
-
-	UFUNCTION()
-	virtual void OnRep_MaxStamina(const FGameplayAttributeData& OldMaxStamina);
-
-	UFUNCTION()
-	virtual void OnRep_StaminaRegenRate(const FGameplayAttributeData& OldStaminaRegenRate);
-
-	UFUNCTION()
-	virtual void OnRep_Armor(const FGameplayAttributeData& OldArmor);
 
 	UFUNCTION()
 	virtual void OnRep_MoveSpeed(const FGameplayAttributeData& OldMoveSpeed);

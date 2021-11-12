@@ -48,12 +48,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 	EGDHitReactDirection GetHitReactDirection(const FVector& ImpactPoint);
 
-	UFUNCTION(NetMulticast, Reliable, WithValidation)
-	virtual void PlayHitReact(FGameplayTag HitDirection, AActor* DamageCauser);
-	virtual void PlayHitReact_Implementation(FGameplayTag HitDirection, AActor* DamageCauser);
-	virtual bool PlayHitReact_Validate(FGameplayTag HitDirection, AActor* DamageCauser);
-
-
 	/**
 	* Getters for attributes from GDAttributeSetBase
 	**/
@@ -66,18 +60,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "GASDocumentation|GDCharacter|Attributes")
 	float GetMaxHealth() const;
-
-	UFUNCTION(BlueprintCallable, Category = "GASDocumentation|GDCharacter|Attributes")
-	float GetMana() const;
-
-	UFUNCTION(BlueprintCallable, Category = "GASDocumentation|GDCharacter|Attributes")
-	float GetMaxMana() const;
-
-	UFUNCTION(BlueprintCallable, Category = "GASDocumentation|GDCharacter|Attributes")
-	float GetStamina() const;
-
-	UFUNCTION(BlueprintCallable, Category = "GASDocumentation|GDCharacter|Attributes")
-	float GetMaxStamina() const;
 	
 	// Gets the Current value of MoveSpeed
 	UFUNCTION(BlueprintCallable, Category = "GASDocumentation|GDCharacter|Attributes")
@@ -143,8 +125,5 @@ protected:
 	* Setters for Attributes. Only use these in special cases like Respawning, otherwise use a GE to change Attributes.
 	* These change the Attribute's Base Value.
 	*/
-
 	virtual void SetHealth(float Health);
-	virtual void SetMana(float Mana);
-	virtual void SetStamina(float Stamina);
 };

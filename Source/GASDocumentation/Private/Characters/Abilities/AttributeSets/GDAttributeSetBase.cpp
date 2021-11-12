@@ -23,14 +23,6 @@ void UGDAttributeSetBase::PreAttributeChange(const FGameplayAttribute& Attribute
 	{
 		AdjustAttributeForMaxChange(Health, MaxHealth, NewValue, GetHealthAttribute());
 	}
-	else if (Attribute == GetMaxManaAttribute())
-	{
-		AdjustAttributeForMaxChange(Mana, MaxMana, NewValue, GetManaAttribute());
-	}
-	else if (Attribute == GetMaxStaminaAttribute())
-	{
-		AdjustAttributeForMaxChange(Stamina, MaxStamina, NewValue, GetStaminaAttribute());
-	}
 	else if (Attribute == GetMoveSpeedAttribute())
 	{
 		// Cannot slow less than 150 units/s and cannot boost more than 1000 units/s
@@ -148,16 +140,6 @@ void UGDAttributeSetBase::PostGameplayEffectExecute(const FGameplayEffectModCall
 		// Health loss should go through Damage.
 		SetHealth(FMath::Clamp(GetHealth(), 0.0f, GetMaxHealth()));
 	} // Health
-	else if (Data.EvaluatedData.Attribute == GetManaAttribute())
-	{
-		// Handle mana changes.
-		SetMana(FMath::Clamp(GetMana(), 0.0f, GetMaxMana()));
-	} // Mana
-	else if (Data.EvaluatedData.Attribute == GetStaminaAttribute())
-	{
-		// Handle stamina changes.
-		SetStamina(FMath::Clamp(GetStamina(), 0.0f, GetMaxStamina()));
-	}
 }
 
 void UGDAttributeSetBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -167,13 +149,6 @@ void UGDAttributeSetBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& 
 	DOREPLIFETIME_CONDITION_NOTIFY(UGDAttributeSetBase, Health, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UGDAttributeSetBase, MaxHealth, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UGDAttributeSetBase, HealthRegenRate, COND_None, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UGDAttributeSetBase, Mana, COND_None, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UGDAttributeSetBase, MaxMana, COND_None, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UGDAttributeSetBase, ManaRegenRate, COND_None, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UGDAttributeSetBase, Stamina, COND_None, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UGDAttributeSetBase, MaxStamina, COND_None, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UGDAttributeSetBase, StaminaRegenRate, COND_None, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UGDAttributeSetBase, Armor, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UGDAttributeSetBase, MoveSpeed, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UGDAttributeSetBase, CharacterLevel, COND_None, REPNOTIFY_Always);
 }
@@ -205,41 +180,6 @@ void UGDAttributeSetBase::OnRep_MaxHealth(const FGameplayAttributeData& OldMaxHe
 void UGDAttributeSetBase::OnRep_HealthRegenRate(const FGameplayAttributeData& OldHealthRegenRate)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UGDAttributeSetBase, HealthRegenRate, OldHealthRegenRate);
-}
-
-void UGDAttributeSetBase::OnRep_Mana(const FGameplayAttributeData& OldMana)
-{
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UGDAttributeSetBase, Mana, OldMana);
-}
-
-void UGDAttributeSetBase::OnRep_MaxMana(const FGameplayAttributeData& OldMaxMana)
-{
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UGDAttributeSetBase, MaxMana, OldMaxMana);
-}
-
-void UGDAttributeSetBase::OnRep_ManaRegenRate(const FGameplayAttributeData& OldManaRegenRate)
-{
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UGDAttributeSetBase, ManaRegenRate, OldManaRegenRate);
-}
-
-void UGDAttributeSetBase::OnRep_Stamina(const FGameplayAttributeData& OldStamina)
-{
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UGDAttributeSetBase, Stamina, OldStamina);
-}
-
-void UGDAttributeSetBase::OnRep_MaxStamina(const FGameplayAttributeData& OldMaxStamina)
-{
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UGDAttributeSetBase, MaxStamina, OldMaxStamina);
-}
-
-void UGDAttributeSetBase::OnRep_StaminaRegenRate(const FGameplayAttributeData& OldStaminaRegenRate)
-{
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UGDAttributeSetBase, StaminaRegenRate, OldStaminaRegenRate);
-}
-
-void UGDAttributeSetBase::OnRep_Armor(const FGameplayAttributeData& OldArmor)
-{
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UGDAttributeSetBase, Armor, OldArmor);
 }
 
 void UGDAttributeSetBase::OnRep_MoveSpeed(const FGameplayAttributeData& OldMoveSpeed)

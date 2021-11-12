@@ -105,15 +105,6 @@ EGDHitReactDirection AGDCharacterBase::GetHitReactDirection(const FVector & Impa
 	return EGDHitReactDirection::Front;
 }
 
-void AGDCharacterBase::PlayHitReact_Implementation(FGameplayTag HitDirection, AActor * DamageCauser)
-{
-}
-
-bool AGDCharacterBase::PlayHitReact_Validate(FGameplayTag HitDirection, AActor * DamageCauser)
-{
-	return true;
-}
-
 int32 AGDCharacterBase::GetCharacterLevel() const
 {
 	if (AttributeSetBase.IsValid())
@@ -139,46 +130,6 @@ float AGDCharacterBase::GetMaxHealth() const
 	if (AttributeSetBase.IsValid())
 	{
 		return AttributeSetBase->GetMaxHealth();
-	}
-
-	return 0.0f;
-}
-
-float AGDCharacterBase::GetMana() const
-{
-	if (AttributeSetBase.IsValid())
-	{
-		return AttributeSetBase->GetMana();
-	}
-
-	return 0.0f;
-}
-
-float AGDCharacterBase::GetMaxMana() const
-{
-	if (AttributeSetBase.IsValid())
-	{
-		return AttributeSetBase->GetMaxMana();
-	}
-
-	return 0.0f;
-}
-
-float AGDCharacterBase::GetStamina() const
-{
-	if (AttributeSetBase.IsValid())
-	{
-		return AttributeSetBase->GetStamina();
-	}
-
-	return 0.0f;
-}
-
-float AGDCharacterBase::GetMaxStamina() const
-{
-	if (AttributeSetBase.IsValid())
-	{
-		return AttributeSetBase->GetMaxStamina();
 	}
 
 	return 0.0f;
@@ -318,20 +269,3 @@ void AGDCharacterBase::SetHealth(float Health)
 		AttributeSetBase->SetHealth(Health);
 	}
 }
-
-void AGDCharacterBase::SetMana(float Mana)
-{
-	if (AttributeSetBase.IsValid())
-	{
-		AttributeSetBase->SetMana(Mana);
-	}
-}
-
-void AGDCharacterBase::SetStamina(float Stamina)
-{
-	if (AttributeSetBase.IsValid())
-	{
-		AttributeSetBase->SetStamina(Stamina);
-	}
-}
-
