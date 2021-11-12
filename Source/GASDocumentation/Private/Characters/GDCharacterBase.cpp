@@ -131,7 +131,7 @@ float AGDCharacterBase::GetHealth() const
 		return AttributeSetBase->GetHealth();
 	}
 
-	return 0.0f;
+	return 100.0f;
 }
 
 float AGDCharacterBase::GetMaxHealth() const

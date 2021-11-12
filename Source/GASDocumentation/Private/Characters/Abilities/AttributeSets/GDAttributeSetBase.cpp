@@ -176,10 +176,6 @@ void UGDAttributeSetBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& 
 	DOREPLIFETIME_CONDITION_NOTIFY(UGDAttributeSetBase, Armor, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UGDAttributeSetBase, MoveSpeed, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UGDAttributeSetBase, CharacterLevel, COND_None, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UGDAttributeSetBase, XP, COND_None, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UGDAttributeSetBase, XPBounty, COND_None, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UGDAttributeSetBase, Gold, COND_None, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UGDAttributeSetBase, GoldBounty, COND_None, REPNOTIFY_Always);
 }
 
 void UGDAttributeSetBase::AdjustAttributeForMaxChange(FGameplayAttributeData & AffectedAttribute, const FGameplayAttributeData & MaxAttribute, float NewMaxValue, const FGameplayAttribute & AffectedAttributeProperty)
@@ -254,24 +250,4 @@ void UGDAttributeSetBase::OnRep_MoveSpeed(const FGameplayAttributeData& OldMoveS
 void UGDAttributeSetBase::OnRep_CharacterLevel(const FGameplayAttributeData& OldCharacterLevel)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UGDAttributeSetBase, CharacterLevel, OldCharacterLevel);
-}
-
-void UGDAttributeSetBase::OnRep_XP(const FGameplayAttributeData& OldXP)
-{
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UGDAttributeSetBase, XP, OldXP);
-}
-
-void UGDAttributeSetBase::OnRep_XPBounty(const FGameplayAttributeData& OldXPBounty)
-{
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UGDAttributeSetBase, XPBounty, OldXPBounty);
-}
-
-void UGDAttributeSetBase::OnRep_Gold(const FGameplayAttributeData& OldGold)
-{
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UGDAttributeSetBase, Gold, OldGold);
-}
-
-void UGDAttributeSetBase::OnRep_GoldBounty(const FGameplayAttributeData& OldGoldBounty)
-{
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UGDAttributeSetBase, GoldBounty, OldGoldBounty);
 }

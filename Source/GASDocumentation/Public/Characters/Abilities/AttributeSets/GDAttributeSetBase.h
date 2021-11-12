@@ -98,26 +98,6 @@ public:
 	FGameplayAttributeData CharacterLevel;
 	ATTRIBUTE_ACCESSORS(UGDAttributeSetBase, CharacterLevel)
 
-	// Experience points gained from killing enemies. Used to level up (not implemented in this project).
-	UPROPERTY(BlueprintReadOnly, Category = "XP", ReplicatedUsing = OnRep_XP)
-	FGameplayAttributeData XP;
-	ATTRIBUTE_ACCESSORS(UGDAttributeSetBase, XP)
-
-	// Experience points awarded to the character's killers. Used to level up (not implemented in this project).
-	UPROPERTY(BlueprintReadOnly, Category = "XP", ReplicatedUsing = OnRep_XPBounty)
-	FGameplayAttributeData XPBounty;
-	ATTRIBUTE_ACCESSORS(UGDAttributeSetBase, XPBounty)
-
-	// Gold gained from killing enemies. Used to purchase items (not implemented in this project).
-	UPROPERTY(BlueprintReadOnly, Category = "Gold", ReplicatedUsing = OnRep_Gold)
-	FGameplayAttributeData Gold;
-	ATTRIBUTE_ACCESSORS(UGDAttributeSetBase, Gold)
-
-	// Gold awarded to the character's killer. Used to purchase items (not implemented in this project).
-	UPROPERTY(BlueprintReadOnly, Category = "Gold", ReplicatedUsing = OnRep_GoldBounty)
-	FGameplayAttributeData GoldBounty;
-	ATTRIBUTE_ACCESSORS(UGDAttributeSetBase, GoldBounty)
-
 protected:
 	// Helper function to proportionally adjust the value of an attribute when it's associated max attribute changes.
 	// (i.e. When MaxHealth increases, Health increases by an amount that maintains the same percentage as before)
@@ -162,16 +142,4 @@ protected:
 
 	UFUNCTION()
 	virtual void OnRep_CharacterLevel(const FGameplayAttributeData& OldCharacterLevel);
-
-	UFUNCTION()
-	virtual void OnRep_XP(const FGameplayAttributeData& OldXP);
-
-	UFUNCTION()
-	virtual void OnRep_XPBounty(const FGameplayAttributeData& OldXPBounty);
-
-	UFUNCTION()
-	virtual void OnRep_Gold(const FGameplayAttributeData& OldGold);
-
-	UFUNCTION()
-	virtual void OnRep_GoldBounty(const FGameplayAttributeData& OldGoldBounty);
 };

@@ -121,26 +121,6 @@ int32 AGDPlayerState::GetCharacterLevel() const
 	return AttributeSetBase->GetCharacterLevel();
 }
 
-int32 AGDPlayerState::GetXP() const
-{
-	return AttributeSetBase->GetXP();
-}
-
-int32 AGDPlayerState::GetXPBounty() const
-{
-	return AttributeSetBase->GetXPBounty();
-}
-
-int32 AGDPlayerState::GetGold() const
-{
-	return AttributeSetBase->GetGold();
-}
-
-int32 AGDPlayerState::GetGoldBounty() const
-{
-	return AttributeSetBase->GetGoldBounty();
-}
-
 void AGDPlayerState::BeginPlay()
 {
 	Super::BeginPlay();
@@ -157,8 +137,6 @@ void AGDPlayerState::BeginPlay()
 		StaminaChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSetBase->GetStaminaAttribute()).AddUObject(this, &AGDPlayerState::StaminaChanged);
 		MaxStaminaChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSetBase->GetMaxStaminaAttribute()).AddUObject(this, &AGDPlayerState::MaxStaminaChanged);
 		StaminaRegenRateChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSetBase->GetStaminaRegenRateAttribute()).AddUObject(this, &AGDPlayerState::StaminaRegenRateChanged);
-		XPChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSetBase->GetXPAttribute()).AddUObject(this, &AGDPlayerState::XPChanged);
-		GoldChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSetBase->GetGoldAttribute()).AddUObject(this, &AGDPlayerState::GoldChanged);
 		CharacterLevelChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSetBase->GetCharacterLevelAttribute()).AddUObject(this, &AGDPlayerState::CharacterLevelChanged);
 
 		// Tag change callbacks
@@ -335,38 +313,6 @@ void AGDPlayerState::StaminaRegenRateChanged(const FOnAttributeChangeData & Data
 		if (HUD)
 		{
 			HUD->SetStaminaRegenRate(StaminaRegenRate);
-		}
-	}
-}
-
-void AGDPlayerState::XPChanged(const FOnAttributeChangeData & Data)
-{
-	float XP = Data.NewValue;
-
-	// Update the HUD
-	AGDPlayerController* PC = Cast<AGDPlayerController>(GetOwner());
-	if (PC)
-	{
-		UGDHUDWidget* HUD = PC->GetHUD();
-		if (HUD)
-		{
-			HUD->SetExperience(XP);
-		}
-	}
-}
-
-void AGDPlayerState::GoldChanged(const FOnAttributeChangeData & Data)
-{
-	float Gold = Data.NewValue;
-
-	// Update the HUD
-	AGDPlayerController* PC = Cast<AGDPlayerController>(GetOwner());
-	if (PC)
-	{
-		UGDHUDWidget* HUD = PC->GetHUD();
-		if (HUD)
-		{
-			HUD->SetGold(Gold);
 		}
 	}
 }

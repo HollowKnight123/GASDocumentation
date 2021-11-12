@@ -71,18 +71,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "GASDocumentation|GDPlayerState|Attributes")
 	int32 GetCharacterLevel() const;
 
-	UFUNCTION(BlueprintCallable, Category = "GASDocumentation|GDPlayerState|Attributes")
-	int32 GetXP() const;
-
-	UFUNCTION(BlueprintCallable, Category = "GASDocumentation|GDPlayerState|Attributes")
-	int32 GetXPBounty() const;
-
-	UFUNCTION(BlueprintCallable, Category = "GASDocumentation|GDPlayerState|Attributes")
-	int32 GetGold() const;
-
-	UFUNCTION(BlueprintCallable, Category = "GASDocumentation|GDPlayerState|Attributes")
-	int32 GetGoldBounty() const;
-
 protected:
 	UPROPERTY()
 	class UGDAbilitySystemComponent* AbilitySystemComponent;
@@ -101,8 +89,6 @@ protected:
 	FDelegateHandle StaminaChangedDelegateHandle;
 	FDelegateHandle MaxStaminaChangedDelegateHandle;
 	FDelegateHandle StaminaRegenRateChangedDelegateHandle;
-	FDelegateHandle XPChangedDelegateHandle;
-	FDelegateHandle GoldChangedDelegateHandle;
 	FDelegateHandle CharacterLevelChangedDelegateHandle;
 
 	// Called when the game starts or when spawned
@@ -118,8 +104,6 @@ protected:
 	virtual void StaminaChanged(const FOnAttributeChangeData& Data);
 	virtual void MaxStaminaChanged(const FOnAttributeChangeData& Data);
 	virtual void StaminaRegenRateChanged(const FOnAttributeChangeData& Data);
-	virtual void XPChanged(const FOnAttributeChangeData& Data);
-	virtual void GoldChanged(const FOnAttributeChangeData& Data);
 	virtual void CharacterLevelChanged(const FOnAttributeChangeData& Data);
 
 	// Tag change callbacks

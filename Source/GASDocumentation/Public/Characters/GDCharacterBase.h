@@ -87,7 +87,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "GASDocumentation|GDCharacter|Attributes")
 	float GetMoveSpeedBaseValue() const;
 
-
 	virtual void Die();
 
 	UFUNCTION(BlueprintCallable, Category = "GASDocumentation|GDCharacter")
