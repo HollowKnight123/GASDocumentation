@@ -33,11 +33,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "GASDocumentation|Camera")
 	FVector GetStartingCameraBoomLocation();
 
-	class UGDFloatingStatusBarWidget* GetFloatingStatusBar();
-
 	USkeletalMeshComponent* GetGunComponent() const;
-
-	virtual void FinishDying() override;
 
 protected:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "GASDocumentation|Camera")
@@ -61,18 +57,7 @@ protected:
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
 	USkeletalMeshComponent* GunComponent;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "GASDocumentation|UI")
-	TSubclassOf<class UGDFloatingStatusBarWidget> UIFloatingStatusBarClass;
-
-	UPROPERTY()
-	class UGDFloatingStatusBarWidget* UIFloatingStatusBar;
-
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "GASDocumentation|UI")
-	class UWidgetComponent* UIFloatingStatusBarComponent;
-
 	bool ASCInputBound = false;
-
-	FGameplayTag DeadTag;
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -96,11 +81,6 @@ protected:
 
 	// Mouse + Gamepad
 	void MoveRight(float Value);
-
-	// Creates and initializes the floating status bar for heroes.
-	// Safe to call many times because it checks to make sure it only executes once.
-	UFUNCTION()
-	void InitializeFloatingStatusBar();
 
 	// Client only
 	virtual void OnRep_PlayerState() override;

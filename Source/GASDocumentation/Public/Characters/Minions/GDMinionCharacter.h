@@ -19,23 +19,5 @@ public:
 	AGDMinionCharacter(const class FObjectInitializer& ObjectInitializer);
 
 protected:
-
-	// Actual hard pointer to AbilitySystemComponent
-	UPROPERTY()
-	class UGDAbilitySystemComponent* HardRefAbilitySystemComponent;
-
-	// Actual hard pointer to AttributeSetBase
-	UPROPERTY()
-	class UGDAttributeSetBase* HardRefAttributeSetBase;
-	
 	virtual void BeginPlay() override;
-	
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "GASDocumentation|UI")
-	TSubclassOf<class UGDFloatingStatusBarWidget> UIFloatingStatusBarClass;
-
-	UPROPERTY()
-	class UGDFloatingStatusBarWidget* UIFloatingStatusBar;
-
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "GASDocumentation|UI")
-	class UWidgetComponent* UIFloatingStatusBarComponent;
 };

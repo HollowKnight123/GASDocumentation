@@ -21,28 +21,6 @@ AGASDocumentationGameMode::AGASDocumentationGameMode()
 	}
 }
 
-void AGASDocumentationGameMode::HeroDied(AController* Controller)
-{
-	FActorSpawnParameters SpawnParameters;
-	SpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-	ASpectatorPawn* SpectatorPawn = GetWorld()->SpawnActor<ASpectatorPawn>(SpectatorClass, Controller->GetPawn()->GetActorTransform(), SpawnParameters);
-
-	Controller->UnPossess();
-	Controller->Possess(SpectatorPawn);
-
-	FTimerHandle RespawnTimerHandle;
-	FTimerDelegate RespawnDelegate;
-
-	RespawnDelegate = FTimerDelegate::CreateUObject(this, &AGASDocumentationGameMode::RespawnHero, Controller);
-	GetWorldTimerManager().SetTimer(RespawnTimerHandle, RespawnDelegate, RespawnDelay, false);
-
-	AGDPlayerController* PC = Cast<AGDPlayerController>(Controller);
-	if (PC)
-	{
-		PC->SetRespawnCountdown(RespawnDelay);
-	}
-}
-
 void AGASDocumentationGameMode::BeginPlay()
 {
 	Super::BeginPlay();

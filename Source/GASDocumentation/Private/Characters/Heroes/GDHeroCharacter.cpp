@@ -39,21 +39,7 @@ AGDHeroCharacter::AGDHeroCharacter(const class FObjectInitializer& ObjectInitial
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	GetMesh()->SetCollisionProfileName(FName("NoCollision"));
 
-	UIFloatingStatusBarComponent = CreateDefaultSubobject<UWidgetComponent>(FName("UIFloatingStatusBarComponent"));
-	UIFloatingStatusBarComponent->SetupAttachment(RootComponent);
-	UIFloatingStatusBarComponent->SetRelativeLocation(FVector(0, 0, 120));
-	UIFloatingStatusBarComponent->SetWidgetSpace(EWidgetSpace::Screen);
-	UIFloatingStatusBarComponent->SetDrawSize(FVector2D(500, 500));
-
-	UIFloatingStatusBarClass = StaticLoadClass(UObject::StaticClass(), nullptr, TEXT("/Game/GASDocumentation/UI/UI_FloatingStatusBar_Hero.UI_FloatingStatusBar_Hero_C"));
-	if (!UIFloatingStatusBarClass)
-	{
-		UE_LOG(LogTemp, Error, TEXT("%s() Failed to find UIFloatingStatusBarClass. If it was moved, please update the reference location in C++."), *FString(__FUNCTION__));
-	}
-
 	AIControllerClass = AGDHeroAIController::StaticClass();
-
-	DeadTag = FGameplayTag::RequestGameplayTag(FName("State.Dead"));
 }
 
 // Called to bind functionality to input
@@ -77,38 +63,6 @@ void AGDHeroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 void AGDHeroCharacter::PossessedBy(AController * NewController)
 {
 	Super::PossessedBy(NewController);
-
-	AGDPlayerState* PS = GetPlayerState<AGDPlayerState>();
-	if (PS)
-	{
-		// Set the ASC on the Server. Clients do this in OnRep_PlayerState()
-		AbilitySystemComponent = Cast<UGDAbilitySystemComponent>(PS->GetAbilitySystemComponent());
-
-		// AI won't have PlayerControllers so we can init again here just to be sure. No harm in initing twice for heroes that have PlayerControllers.
-		PS->GetAbilitySystemComponent()->InitAbilityActorInfo(PS, this);
-
-		// Set the AttributeSetBase for convenience attribute functions
-		AttributeSetBase = PS->GetAttributeSetBase();
-
-		// If we handle players disconnecting and rejoining in the future, we'll have to change this so that possession from rejoining doesn't reset attributes.
-		// For now assume possession = spawn/respawn.
-		InitializeAttributes();
-
-		// Forcibly set the DeadTag count to 0
-		AbilitySystemComponent->SetTagMapCount(DeadTag, 0);
-
-		AddStartupEffects();
-
-		AddCharacterAbilities();
-
-		AGDPlayerController* PC = Cast<AGDPlayerController>(GetController());
-		if (PC)
-		{
-			PC->CreateHUD();
-		}
-
-		InitializeFloatingStatusBar();
-	}
 }
 
 USpringArmComponent * AGDHeroCharacter::GetCameraBoom()
@@ -131,29 +85,9 @@ FVector AGDHeroCharacter::GetStartingCameraBoomLocation()
 	return StartingCameraBoomLocation;
 }
 
-UGDFloatingStatusBarWidget * AGDHeroCharacter::GetFloatingStatusBar()
-{
-	return UIFloatingStatusBar;
-}
-
 USkeletalMeshComponent * AGDHeroCharacter::GetGunComponent() const
 {
 	return GunComponent;
-}
-
-void AGDHeroCharacter::FinishDying()
-{
-	if (GetLocalRole() == ROLE_Authority)
-	{
-		AGASDocumentationGameMode* GM = Cast<AGASDocumentationGameMode>(GetWorld()->GetAuthGameMode());
-
-		if (GM)
-		{
-			GM->HeroDied(GetController());
-		}
-	}
-
-	Super::FinishDying();
 }
 
 /**
@@ -165,11 +99,6 @@ void AGDHeroCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// Only needed for Heroes placed in world and when the player is the Server.
-	// On respawn, they are set up in PossessedBy.
-	// When the player a client, the floating status bars are all set up in OnRep_PlayerState.
-	InitializeFloatingStatusBar();
-
 	StartingCameraBoomArmLength = CameraBoom->TargetArmLength;
 	StartingCameraBoomLocation = CameraBoom->GetRelativeLocation();
 }
@@ -178,42 +107,28 @@ void AGDHeroCharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 
-	if (GunComponent && GetMesh())
-	{
-		GunComponent->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, FName("GunSocket"));
-	}
+	GunComponent->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, FName("GunSocket"));
+
 }
 
 void AGDHeroCharacter::LookUp(float Value)
 {
-	if (IsAlive())
-	{
-		AddControllerPitchInput(Value);
-	}
+	AddControllerPitchInput(Value);
 }
 
 void AGDHeroCharacter::LookUpRate(float Value)
 {
-	if (IsAlive())
-	{
-		AddControllerPitchInput(Value * BaseLookUpRate * GetWorld()->DeltaTimeSeconds);
-	}
+	AddControllerPitchInput(Value * BaseLookUpRate * GetWorld()->DeltaTimeSeconds);
 }
 
 void AGDHeroCharacter::Turn(float Value)
 {
-	if (IsAlive())
-	{
-		AddControllerYawInput(Value);
-	}
+	AddControllerYawInput(Value);
 }
 
 void AGDHeroCharacter::TurnRate(float Value)
 {
-	if (IsAlive())
-	{
-		AddControllerYawInput(Value * BaseTurnRate * GetWorld()->DeltaTimeSeconds);
-	}
+	AddControllerYawInput(Value * BaseTurnRate * GetWorld()->DeltaTimeSeconds);
 }
 
 void AGDHeroCharacter::MoveForward(float Value)
@@ -226,74 +141,12 @@ void AGDHeroCharacter::MoveRight(float Value)
 	AddMovementInput(UKismetMathLibrary::GetRightVector(FRotator(0, GetControlRotation().Yaw, 0)), Value);
 }
 
-void AGDHeroCharacter::InitializeFloatingStatusBar()
-{
-	// Only create once
-	if (UIFloatingStatusBar || !AbilitySystemComponent.IsValid())
-	{
-		return;
-	}
-
-	// Setup UI for Locally Owned Players only, not AI or the server's copy of the PlayerControllers
-	AGDPlayerController* PC = Cast<AGDPlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
-	if (PC && PC->IsLocalPlayerController())
-	{
-		if (UIFloatingStatusBarClass)
-		{
-			UIFloatingStatusBar = CreateWidget<UGDFloatingStatusBarWidget>(PC, UIFloatingStatusBarClass);
-			if (UIFloatingStatusBar && UIFloatingStatusBarComponent)
-			{
-				UIFloatingStatusBarComponent->SetWidget(UIFloatingStatusBar);
-			}
-		}
-	}
-}
-
 // Client only
 void AGDHeroCharacter::OnRep_PlayerState()
 {
 	Super::OnRep_PlayerState();
-
-	AGDPlayerState* PS = GetPlayerState<AGDPlayerState>();
-	if (PS)
-	{
-		// Set the ASC for clients. Server does this in PossessedBy.
-		AbilitySystemComponent = Cast<UGDAbilitySystemComponent>(PS->GetAbilitySystemComponent());
-
-		// Init ASC Actor Info for clients. Server will init its ASC when it possesses a new Actor.
-		AbilitySystemComponent->InitAbilityActorInfo(PS, this);
-
-		// Bind player input to the AbilitySystemComponent. Also called in SetupPlayerInputComponent because of a potential race condition.
-		BindASCInput();
-
-		// Set the AttributeSetBase for convenience attribute functions
-		AttributeSetBase = PS->GetAttributeSetBase();
-
-		// If we handle players disconnecting and rejoining in the future, we'll have to change this so that posession from rejoining doesn't reset attributes.
-		// For now assume possession = spawn/respawn.
-		InitializeAttributes();
-
-		AGDPlayerController* PC = Cast<AGDPlayerController>(GetController());
-		if (PC)
-		{
-			PC->CreateHUD();
-		}
-
-		// Simulated on proxies don't have their PlayerStates yet when BeginPlay is called so we call it again here
-		InitializeFloatingStatusBar();
-
-		// Forcibly set the DeadTag count to 0
-		AbilitySystemComponent->SetTagMapCount(DeadTag, 0);
-	}
 }
 
 void AGDHeroCharacter::BindASCInput()
 {
-	if (!ASCInputBound && AbilitySystemComponent.IsValid() && IsValid(InputComponent))
-	{
-		AbilitySystemComponent->BindAbilityActivationToInputComponent(InputComponent, FGameplayAbilityInputBinds(FString("ConfirmTarget"),
-			FString("CancelTarget"), FString("EGDAbilityInputID"), static_cast<int32>(EGDAbilityInputID::Confirm), static_cast<int32>(EGDAbilityInputID::Cancel)));
-
-		ASCInputBound = true;
-	}
 }
