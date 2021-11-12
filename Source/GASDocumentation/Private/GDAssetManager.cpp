@@ -4,7 +4,6 @@
 #include "GDAssetManager.h"
 #include "AbilitySystemGlobals.h"
 
-
 UGDAssetManager& UGDAssetManager::Get() 
 {
 	UGDAssetManager* Singleton = Cast<UGDAssetManager>(GEngine->AssetManager);

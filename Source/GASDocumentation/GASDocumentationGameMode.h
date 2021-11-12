@@ -14,8 +14,6 @@ class AGASDocumentationGameMode : public AGameModeBase
 public:
 	AGASDocumentationGameMode();
 
-	void HeroDied(AController* Controller);
-
 protected:
 	float RespawnDelay;
 
