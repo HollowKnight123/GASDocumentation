@@ -106,10 +106,6 @@ protected:
 	TWeakObjectPtr<class UGDAbilitySystemComponent> AbilitySystemComponent;
 	TWeakObjectPtr<class UGDAttributeSetBase> AttributeSetBase;
 
-	FGameplayTag HitDirectionFrontTag;
-	FGameplayTag HitDirectionBackTag;
-	FGameplayTag HitDirectionRightTag;
-	FGameplayTag HitDirectionLeftTag;
 	FGameplayTag DeadTag;
 	FGameplayTag EffectRemoveOnDeathTag;
 

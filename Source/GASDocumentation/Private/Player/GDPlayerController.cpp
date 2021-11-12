@@ -38,23 +38,6 @@ void AGDPlayerController::CreateHUD()
 	UIHUDWidget = CreateWidget<UGDHUDWidget>(this, UIHUDWidgetClass);
 	UIHUDWidget->AddToViewport();
 
-	// Set attributes
-	UIHUDWidget->SetCurrentHealth(PS->GetHealth());
-	UIHUDWidget->SetMaxHealth(PS->GetMaxHealth());
-	UIHUDWidget->SetHealthPercentage(PS->GetHealth() / FMath::Max<float>(PS->GetMaxHealth(), 1.f));
-	UIHUDWidget->SetCurrentMana(PS->GetMana());
-	UIHUDWidget->SetMaxMana(PS->GetMaxMana());
-	UIHUDWidget->SetManaPercentage(PS->GetMana() / FMath::Max<float>(PS->GetMaxMana(), 1.f));
-	UIHUDWidget->SetHealthRegenRate(PS->GetHealthRegenRate());
-	UIHUDWidget->SetManaRegenRate(PS->GetManaRegenRate());
-	UIHUDWidget->SetCurrentStamina(PS->GetStamina());
-	UIHUDWidget->SetMaxStamina(PS->GetMaxStamina());
-	UIHUDWidget->SetStaminaPercentage(PS->GetStamina() / FMath::Max<float>(PS->GetMaxStamina(), 1.f));
-	UIHUDWidget->SetStaminaRegenRate(PS->GetStaminaRegenRate());
-	UIHUDWidget->SetExperience(PS->GetXP());
-	UIHUDWidget->SetGold(PS->GetGold());
-	UIHUDWidget->SetHeroLevel(PS->GetCharacterLevel());
-
 	DamageNumberClass = StaticLoadClass(UObject::StaticClass(), nullptr, TEXT("/Game/GASDocumentation/UI/WC_DamageText.WC_DamageText_C"));
 	if (!DamageNumberClass)
 	{

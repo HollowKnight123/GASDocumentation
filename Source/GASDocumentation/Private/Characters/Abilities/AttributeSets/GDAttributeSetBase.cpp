@@ -10,11 +10,7 @@
 
 UGDAttributeSetBase::UGDAttributeSetBase()
 {
-	// Cache tags
-	HitDirectionFrontTag = FGameplayTag::RequestGameplayTag(FName("Effect.HitReact.Front"));
-	HitDirectionBackTag = FGameplayTag::RequestGameplayTag(FName("Effect.HitReact.Back"));
-	HitDirectionRightTag = FGameplayTag::RequestGameplayTag(FName("Effect.HitReact.Right"));
-	HitDirectionLeftTag = FGameplayTag::RequestGameplayTag(FName("Effect.HitReact.Left"));
+
 }
 
 void UGDAttributeSetBase::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
@@ -133,34 +129,6 @@ void UGDAttributeSetBase::PostGameplayEffectExecute(const FGameplayEffectModCall
 			{
 				// This is the log statement for damage received. Turned off for live games.
 				//UE_LOG(LogTemp, Log, TEXT("%s() %s Damage Received: %f"), TEXT(__FUNCTION__), *GetOwningActor()->GetName(), LocalDamageDone);
-
-				// Play HitReact animation and sound with a multicast RPC.
-				const FHitResult* Hit = Data.EffectSpec.GetContext().GetHitResult();
-
-				if (Hit)
-				{
-					EGDHitReactDirection HitDirection = TargetCharacter->GetHitReactDirection(Data.EffectSpec.GetContext().GetHitResult()->Location);
-					switch (HitDirection)
-					{
-					case EGDHitReactDirection::Left:
-						TargetCharacter->PlayHitReact(HitDirectionLeftTag, SourceCharacter);
-						break;
-					case EGDHitReactDirection::Front:
-						TargetCharacter->PlayHitReact(HitDirectionFrontTag, SourceCharacter);
-						break;
-					case EGDHitReactDirection::Right:
-						TargetCharacter->PlayHitReact(HitDirectionRightTag, SourceCharacter);
-						break;
-					case EGDHitReactDirection::Back:
-						TargetCharacter->PlayHitReact(HitDirectionBackTag, SourceCharacter);
-						break;
-					}
-				}
-				else
-				{
-					// No hit result. Default to front.
-					TargetCharacter->PlayHitReact(HitDirectionFrontTag, SourceCharacter);
-				}
 
 				// Show damage number for the Source player unless it was self damage
 				if (SourceActor != TargetActor)

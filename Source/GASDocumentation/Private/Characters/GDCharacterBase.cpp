@@ -21,10 +21,6 @@ AGDCharacterBase::AGDCharacterBase(const class FObjectInitializer& ObjectInitial
 	bAlwaysRelevant = true;
 
 	// Cache tags
-	HitDirectionFrontTag = FGameplayTag::RequestGameplayTag(FName("Effect.HitReact.Front"));
-	HitDirectionBackTag = FGameplayTag::RequestGameplayTag(FName("Effect.HitReact.Back"));
-	HitDirectionRightTag = FGameplayTag::RequestGameplayTag(FName("Effect.HitReact.Right"));
-	HitDirectionLeftTag = FGameplayTag::RequestGameplayTag(FName("Effect.HitReact.Left"));
 	DeadTag = FGameplayTag::RequestGameplayTag(FName("State.Dead"));
 	EffectRemoveOnDeathTag = FGameplayTag::RequestGameplayTag(FName("Effect.RemoveOnDeath"));
 }
@@ -111,25 +107,6 @@ EGDHitReactDirection AGDCharacterBase::GetHitReactDirection(const FVector & Impa
 
 void AGDCharacterBase::PlayHitReact_Implementation(FGameplayTag HitDirection, AActor * DamageCauser)
 {
-	if (IsAlive())
-	{
-		if (HitDirection == HitDirectionLeftTag)
-		{
-			ShowHitReact.Broadcast(EGDHitReactDirection::Left);
-		}
-		else if (HitDirection == HitDirectionFrontTag)
-		{
-			ShowHitReact.Broadcast(EGDHitReactDirection::Front);
-		}
-		else if (HitDirection == HitDirectionRightTag)
-		{
-			ShowHitReact.Broadcast(EGDHitReactDirection::Right);
-		}
-		else if (HitDirection == HitDirectionBackTag)
-		{
-			ShowHitReact.Broadcast(EGDHitReactDirection::Back);
-		}
-	}
 }
 
 bool AGDCharacterBase::PlayHitReact_Validate(FGameplayTag HitDirection, AActor * DamageCauser)
