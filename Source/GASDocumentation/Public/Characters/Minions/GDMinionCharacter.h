@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "Characters/GDCharacterBase.h"
-#include "GameplayEffectTypes.h"
 #include "GDMinionCharacter.generated.h"
 
 /**

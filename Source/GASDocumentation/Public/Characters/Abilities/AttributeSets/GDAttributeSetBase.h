@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "AttributeSet.h"
-#include "AbilitySystemComponent.h"
 #include "GDAttributeSetBase.generated.h"
 
 // Uses macros from AttributeSet.h
