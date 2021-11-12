@@ -45,9 +45,6 @@ public:
 	// Removes all CharacterAbilities. Can only be called by the Server. Removing on the Server will remove from Client too.
 	virtual void RemoveCharacterAbilities();
 
-	UFUNCTION(BlueprintCallable)
-	EGDHitReactDirection GetHitReactDirection(const FVector& ImpactPoint);
-
 	/**
 	* Getters for attributes from GDAttributeSetBase
 	**/

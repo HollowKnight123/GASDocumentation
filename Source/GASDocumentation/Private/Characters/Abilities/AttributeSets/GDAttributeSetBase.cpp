@@ -78,48 +78,6 @@ void UGDAttributeSetBase::PostGameplayEffectExecute(const FGameplayEffectModCall
 			SourceActor = Context.GetEffectCauser();
 		}
 	}
-
-	if (Data.EvaluatedData.Attribute == GetDamageAttribute())
-	{
-		// Try to extract a hit result
-		FHitResult HitResult;
-		if (Context.GetHitResult())
-		{
-			HitResult = *Context.GetHitResult();
-		}
-
-		// Store a local copy of the amount of damage done and clear the damage attribute
-		const float LocalDamageDone = GetDamage();
-		SetDamage(0.f);
-	
-		if (LocalDamageDone > 0.0f)
-		{
-			// If character was alive before damage is added, handle damage
-			// This prevents damage being added to dead things and replaying death animations
-			bool WasAlive = true;
-
-			if (TargetCharacter)
-			{
-				WasAlive = TargetCharacter->IsAlive();
-			}
-
-			if (TargetCharacter && WasAlive)
-			{
-				// This is the log statement for damage received. Turned off for live games.
-				//UE_LOG(LogTemp, Log, TEXT("%s() %s Damage Received: %f"), TEXT(__FUNCTION__), *GetOwningActor()->GetName(), LocalDamageDone);
-
-				// Show damage number for the Source player unless it was self damage
-				if (SourceActor != TargetActor)
-				{
-					AGDPlayerController* PC = Cast<AGDPlayerController>(SourceController);
-					if (PC)
-					{
-						PC->ShowDamageNumber(LocalDamageDone, TargetCharacter);
-					}
-				}
-			}
-		}
-	}// Damage
 }
 
 void UGDAttributeSetBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const

@@ -48,19 +48,6 @@ bool AGDPlayerState::IsAlive() const
 	return true;
 }
 
-void AGDPlayerState::ShowAbilityConfirmCancelText(bool ShowText)
-{
-	AGDPlayerController* PC = Cast<AGDPlayerController>(GetOwner());
-	if (PC)
-	{
-		UGDHUDWidget* HUD = PC->GetHUD();
-		if (HUD)
-		{
-			HUD->ShowAbilityConfirmCancelText(ShowText);
-		}
-	}
-}
-
 float AGDPlayerState::GetMoveSpeed() const
 {
 	return AttributeSetBase->GetMoveSpeed();

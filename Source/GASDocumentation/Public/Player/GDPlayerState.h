@@ -26,9 +26,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "GASDocumentation|GDPlayerState")
 	bool IsAlive() const;
 
-	UFUNCTION(BlueprintCallable, Category = "GASDocumenation|GDPlayerState|UI")
-	void ShowAbilityConfirmCancelText(bool ShowText);
-
 	UFUNCTION(BlueprintCallable, Category = "GASDocumentation|GDPlayerState|Attributes")
 	float GetMoveSpeed() const;
 

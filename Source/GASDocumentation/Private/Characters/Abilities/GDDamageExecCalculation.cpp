@@ -8,16 +8,8 @@
 // Declare the attributes to capture and define how we want to capture them from the Source and Target.
 struct GDDamageStatics
 {
-	DECLARE_ATTRIBUTE_CAPTUREDEF(Damage);
-
 	GDDamageStatics()
 	{
-		// Snapshot happens at time of GESpec creation
-
-		// We're not capturing anything from the Source in this example, but there could be like AttackPower attributes that you might want.
-
-		// Capture optional Damage set on the damage GE as a CalculationModifier under the ExecutionCalculation
-		DEFINE_ATTRIBUTE_CAPTUREDEF(UGDAttributeSetBase, Damage, Source, true);
 	}
 };
 
@@ -29,7 +21,6 @@ static const GDDamageStatics& DamageStatics()
 
 UGDDamageExecCalculation::UGDDamageExecCalculation()
 {
-	RelevantAttributesToCapture.Add(DamageStatics().DamageDef);
 }
 
 void UGDDamageExecCalculation::Execute_Implementation(const FGameplayEffectCustomExecutionParameters & ExecutionParams, OUT FGameplayEffectCustomExecutionOutput & OutExecutionOutput) const
@@ -49,28 +40,4 @@ void UGDDamageExecCalculation::Execute_Implementation(const FGameplayEffectCusto
 	FAggregatorEvaluateParameters EvaluationParameters;
 	EvaluationParameters.SourceTags = SourceTags;
 	EvaluationParameters.TargetTags = TargetTags;
-
-	float Damage = 0.0f;
-	// Capture optional damage value set on the damage GE as a CalculationModifier under the ExecutionCalculation
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().DamageDef, EvaluationParameters, Damage);
-	// Add SetByCaller damage if it exists
-	Damage += FMath::Max<float>(Spec.GetSetByCallerMagnitude(FGameplayTag::RequestGameplayTag(FName("Data.Damage")), false, -1.0f), 0.0f);
-
-	float UnmitigatedDamage = Damage; // Can multiply any damage boosters here
-	
-	float MitigatedDamage = UnmitigatedDamage;
-
-	if (MitigatedDamage > 0.f)
-	{
-		// Set the Target's damage meta attribute
-		OutExecutionOutput.AddOutputModifier(FGameplayModifierEvaluatedData(DamageStatics().DamageProperty, EGameplayModOp::Additive, MitigatedDamage));
-	}
-
-	// Broadcast damages to Target ASC
-	UGDAbilitySystemComponent* TargetASC = Cast<UGDAbilitySystemComponent>(TargetAbilitySystemComponent);
-	if (TargetASC)
-	{
-		UGDAbilitySystemComponent* SourceASC = Cast<UGDAbilitySystemComponent>(SourceAbilitySystemComponent);
-		TargetASC->ReceiveDamage(SourceASC, UnmitigatedDamage, MitigatedDamage);
-	}
 }

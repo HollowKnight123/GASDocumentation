@@ -66,45 +66,6 @@ void AGDCharacterBase::RemoveCharacterAbilities()
 	AbilitySystemComponent->CharacterAbilitiesGiven = false;
 }
 
-EGDHitReactDirection AGDCharacterBase::GetHitReactDirection(const FVector & ImpactPoint)
-{
-	const FVector& ActorLocation = GetActorLocation();
-	// PointPlaneDist is super cheap - 1 vector subtraction, 1 dot product.
-	float DistanceToFrontBackPlane = FVector::PointPlaneDist(ImpactPoint, ActorLocation, GetActorRightVector());
-	float DistanceToRightLeftPlane = FVector::PointPlaneDist(ImpactPoint, ActorLocation, GetActorForwardVector());
-
-
-	if (FMath::Abs(DistanceToFrontBackPlane) <= FMath::Abs(DistanceToRightLeftPlane))
-	{
-		// Determine if Front or Back
-
-		// Can see if it's left or right of Left/Right plane which would determine Front or Back
-		if (DistanceToRightLeftPlane >= 0)
-		{
-			return EGDHitReactDirection::Front;
-		}
-		else
-		{
-			return EGDHitReactDirection::Back;
-		}
-	}
-	else
-	{
-		// Determine if Right or Left
-
-		if (DistanceToFrontBackPlane >= 0)
-		{
-			return EGDHitReactDirection::Right;
-		}
-		else
-		{
-			return EGDHitReactDirection::Left;
-		}
-	}
-
-	return EGDHitReactDirection::Front;
-}
-
 float AGDCharacterBase::GetMoveSpeed() const
 {
 	if (AttributeSetBase.IsValid())
